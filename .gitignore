@@ -1,7 +1,11 @@
 node_modules
 .next
 out
-.env
-.env.local
+.vercel
+
+# every env file stays local, except the committed template
+.env*
+!.env.example
+
 .DS_Store
 *.log
