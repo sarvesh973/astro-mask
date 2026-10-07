@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { site } from "@/content/site";
 import { MandalaBg } from "./Ornaments";
 import { Check, ICON_MAP, Lotus, Star } from "./Icons";
+import Cta from "./Cta";
 
 /* ---------------------------------------------------------------- header */
 
@@ -28,9 +29,7 @@ export function Header() {
           </span>
         </a>
 
-        <a className="btn btn-stamp" href="#start">
-          Start
-        </a>
+        <Cta href="#start" size="sm" variant="ghost">Start</Cta>
       </div>
     </header>
   );
@@ -53,9 +52,7 @@ export function Hero() {
         <p className="hero-sub">{hero.subheadline}</p>
 
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10 }}>
-          <a className="btn btn-primary btn-hero" href="#start">
-            {hero.ctaLabel}
-          </a>
+          <Cta href="#start">{hero.ctaLabel}</Cta>
           <span className="cta-note">{hero.ctaSubtext}</span>
         </div>
 
@@ -208,9 +205,7 @@ export function ClosingCta() {
           <p className="section-sub" style={{ margin: "0 auto 24px" }}>
             {hero.ctaSubtext}
           </p>
-          <a className="btn btn-primary btn-hero" href="#start">
-            {hero.ctaLabel}
-          </a>
+          <Cta href="#start">{hero.ctaLabel}</Cta>
         </div>
       </div>
     </section>
