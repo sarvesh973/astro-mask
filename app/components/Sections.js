@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { site } from "@/content/site";
 import { MandalaBg } from "./Ornaments";
-import { ArrowRight, Check, ICON_MAP, Lotus, Star } from "./Icons";
+import { Check, ICON_MAP, Lotus, Star } from "./Icons";
 
 /* ---------------------------------------------------------------- header */
 
@@ -28,9 +28,8 @@ export function Header() {
           </span>
         </a>
 
-        <a className="btn btn-primary" href="#start" style={{ padding: "11px 22px", fontSize: 14.5 }}>
+        <a className="btn btn-stamp" href="#start">
           Start
-          <ArrowRight width={15} height={15} />
         </a>
       </div>
     </header>
@@ -54,9 +53,8 @@ export function Hero() {
         <p className="hero-sub">{hero.subheadline}</p>
 
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10 }}>
-          <a className="btn btn-primary btn-lg" href="#start">
+          <a className="btn btn-primary btn-hero" href="#start">
             {hero.ctaLabel}
-            <ArrowRight width={18} height={18} />
           </a>
           <span className="cta-note">{hero.ctaSubtext}</span>
         </div>
@@ -210,9 +208,8 @@ export function ClosingCta() {
           <p className="section-sub" style={{ margin: "0 auto 24px" }}>
             {hero.ctaSubtext}
           </p>
-          <a className="btn btn-primary btn-lg" href="#start">
+          <a className="btn btn-primary btn-hero" href="#start">
             {hero.ctaLabel}
-            <ArrowRight width={18} height={18} />
           </a>
         </div>
       </div>
