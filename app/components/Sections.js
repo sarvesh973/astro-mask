@@ -3,8 +3,20 @@
 import { useEffect } from "react";
 import { site } from "@/content/site";
 import { MandalaBg } from "./Ornaments";
-import { Check, ICON_MAP, Lotus, Star } from "./Icons";
+import { Diya, Lotus, Star } from "./Icons";
 import Cta from "./Cta";
+
+/* Send a question into the funnel and scroll the visitor to it. The funnel
+   listens for this on the window, which keeps the two independent. */
+export function askInFunnel(question = "") {
+  window.dispatchEvent(
+    new CustomEvent("dakshastro:ask", { detail: { question } })
+  );
+  document.getElementById("start")?.scrollIntoView({
+    behavior: "smooth",
+    block: "start",
+  });
+}
 
 /* ---------------------------------------------------------------- header */
 
@@ -50,19 +62,60 @@ export function Hero() {
         </h1>
 
         <p className="hero-sub">{hero.subheadline}</p>
+        {hero.subheadlineTwo ? (
+          <p className="hero-sub hero-sub--tight">{hero.subheadlineTwo}</p>
+        ) : null}
 
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10 }}>
+        <div className="hero-actions">
           <Cta href="#start">{hero.ctaLabel}</Cta>
-          <span className="cta-note">{hero.ctaSubtext}</span>
+          {hero.ctaSecondary ? (
+            <a className="cta-text" href="#philosophy">
+              {hero.ctaSecondary}
+            </a>
+          ) : null}
         </div>
+
+        <span className="cta-note">{hero.ctaSubtext}</span>
 
         <div className="trust">
           {trustBadges.map((t) => (
-            <span className="trust-item" key={t}>
-              <Check width={13} height={13} />
-              {t}
+            <span className="trust-item" key={t.label}>
+              <span className="trust-emoji" aria-hidden="true">{t.emoji}</span>
+              {t.label}
             </span>
           ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------------------------------------------------------- introduction */
+
+export function Intro() {
+  const { intro } = site;
+  if (!intro) return null;
+
+  return (
+    <section className="section reveal" id="philosophy">
+      <div className="wrap-narrow">
+        <div className="intro-card">
+          <span className="eyebrow">{intro.eyebrow}</span>
+          <h2 className="section-title" style={{ margin: "16px 0 20px" }}>
+            {intro.title}
+          </h2>
+
+          {intro.body.map((p, i) => (
+            <p className="intro-body" key={i}>{p}</p>
+          ))}
+
+          {intro.emphasis ? (
+            <p className="intro-emphasis">{intro.emphasis}</p>
+          ) : null}
+
+          <div style={{ marginTop: 28 }}>
+            <Cta href="#start">{intro.cta}</Cta>
+          </div>
         </div>
       </div>
     </section>
@@ -102,26 +155,96 @@ export function LogoWall() {
 export function HowItWorks() {
   const { howItWorks } = site;
   return (
-    <section className="section reveal">
+    <section className="section reveal" id="how">
       <div className="wrap">
         <div className="section-head">
-          <span className="divider"><Lotus width={18} height={18} /></span>
+          <span className="eyebrow">{howItWorks.eyebrow}</span>
           <h2 className="section-title">{howItWorks.title}</h2>
-          <p className="section-sub">{howItWorks.subtitle}</p>
         </div>
 
         <div className="steps-grid">
-          {howItWorks.steps.map((s, i) => {
-            const Icon = ICON_MAP[s.icon] || ICON_MAP.sun;
-            return (
-              <article className="how-card" key={s.title}>
-                <span className="how-card-n">{i + 1}</span>
-                <span className="how-icon"><Icon width={22} height={22} /></span>
-                <h3>{s.title}</h3>
-                <p>{s.body}</p>
-              </article>
-            );
-          })}
+          {howItWorks.steps.map((s, i) => (
+            <article className="how-card" key={s.title}>
+              <span className="how-card-n">{String(i + 1).padStart(2, "0")}</span>
+              <span className="how-emoji" aria-hidden="true">{s.emoji}</span>
+              <h3>{s.title}</h3>
+              <p className="how-lead">{s.lead}</p>
+              <p>{s.body}</p>
+            </article>
+          ))}
+        </div>
+
+        <div className="section-foot">
+          <Cta href="#start">{howItWorks.cta}</Cta>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ------------------------------------------------------------- categories */
+
+export function Categories() {
+  const { categories } = site;
+  if (!categories?.items?.length) return null;
+
+  return (
+    <section className="section reveal" id="categories">
+      <div className="wrap">
+        <div className="section-head">
+          <span className="eyebrow">{categories.eyebrow}</span>
+          <h2 className="section-title">{categories.title}</h2>
+        </div>
+
+        <div className="cat-grid">
+          {categories.items.map((c) => (
+            <article className="cat-card" key={c.title}>
+              <span className="cat-emoji" aria-hidden="true">{c.emoji}</span>
+              <h3>{c.title}</h3>
+              <p>{c.body}</p>
+              <button
+                type="button"
+                className="cat-btn"
+                onClick={() => askInFunnel(c.question)}
+              >
+                {c.button}
+                <span className="cat-btn-arrow" aria-hidden="true">→</span>
+              </button>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------------------------------------------------------------- dakshina */
+
+export function Dakshina() {
+  const { dakshina } = site;
+  if (!dakshina) return null;
+
+  return (
+    <section className="section reveal" id="dakshina">
+      <div className="wrap-narrow">
+        <div className="daksh-band">
+          <div className="daksh-lamp" aria-hidden="true">
+            <span className="daksh-glow" />
+            <Diya size={92} />
+          </div>
+
+          <span className="eyebrow">{dakshina.eyebrow}</span>
+          <h2 className="section-title" style={{ margin: "16px 0 20px" }}>
+            {dakshina.title}
+          </h2>
+
+          {dakshina.body.map((p, i) => (
+            <p className="daksh-body" key={i}>{p}</p>
+          ))}
+
+          {dakshina.emphasis ? (
+            <p className="daksh-emphasis">{dakshina.emphasis}</p>
+          ) : null}
         </div>
       </div>
     </section>
@@ -169,7 +292,7 @@ export function Testimonials() {
 export function Faq() {
   const { faq } = site;
   return (
-    <section className="section reveal">
+    <section className="section reveal" id="faq">
       <div className="wrap">
         <div className="section-head">
           <span className="divider"><Lotus width={18} height={18} /></span>
@@ -192,17 +315,16 @@ export function Faq() {
 /* ---------------------------------------------------------------- closing */
 
 export function ClosingCta() {
-  const { hero } = site;
+  const { closing, hero } = site;
   return (
     <section className="section reveal" style={{ paddingTop: 0 }}>
       <div className="wrap-narrow">
         <div className="card card-pad" style={{ textAlign: "center" }}>
-          <span className="eyebrow">One Question. One Reading.</span>
+          <span className="eyebrow">{closing.eyebrow}</span>
           <h2 className="section-title" style={{ margin: "14px 0 12px" }}>
-            {/* ---- HEADLINE SLOT: closing CTA ---- */}
-            Ready when you are
+            {closing.title}
           </h2>
-          <p className="section-sub" style={{ margin: "0 auto 24px" }}>
+          <p className="section-sub" style={{ margin: "0 auto 26px" }}>
             {hero.ctaSubtext}
           </p>
           <Cta href="#start">{hero.ctaLabel}</Cta>
@@ -219,7 +341,7 @@ export function Footer() {
   return (
     <footer className="footer">
       <div className="wrap footer-in">
-        <div style={{ maxWidth: 420 }}>
+        <div style={{ maxWidth: 440 }}>
           <div className="brand" style={{ marginBottom: 6 }}>
             {brand.logo ? (
               <span className="logo-slot">

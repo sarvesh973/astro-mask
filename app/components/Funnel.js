@@ -81,6 +81,18 @@ export default function Funnel() {
     if (step === 2) setTimeout(() => taRef.current?.focus(), 420);
   }, [step]);
 
+  /* A category card was tapped further down the page: carry its question in
+     so it is already written when the visitor reaches the question step. */
+  useEffect(() => {
+    const onAsk = (e) => {
+      const q = e.detail?.question;
+      if (typeof q === "string" && q) setQuestion(q);
+      track("Lead", { content_name: "category_selected" });
+    };
+    window.addEventListener("dakshastro:ask", onAsk);
+    return () => window.removeEventListener("dakshastro:ask", onAsk);
+  }, []);
+
   /* ==================================================== payment ========== */
   const startPayment = async () => {
     setError("");
@@ -359,7 +371,7 @@ export default function Funnel() {
     </div>
   );
 
-  const { minAmount, maxAmount, presets, note, freeHint } = site.payment;
+  const { minAmount, maxAmount, presets, note, minNote } = site.payment;
   const pct = ((amount - minAmount) / (maxAmount - minAmount)) * 100;
   const intensity = Math.min(1, Math.log10(Math.max(amount, 1)) / Math.log10(maxAmount));
 
@@ -382,7 +394,7 @@ export default function Funnel() {
 
         <div className="amount-display">
           <div className="amount-value"><sup>₹</sup>{amount.toLocaleString("en-IN")}</div>
-          <div className="amount-caption">Your offering</div>
+          <div className="amount-caption">Your dakshina</div>
         </div>
 
         <div className="presets">
@@ -448,14 +460,17 @@ export default function Funnel() {
           onClick={startPayment}
         >
           {paying ? <span className="spinner" /> : <Lock width={17} height={17} />}
-          {paying ? "Opening payment…" : `Pay ₹${amount.toLocaleString("en-IN")} & reveal`}
+          {paying ? "Opening payment…" : `Offer ₹${amount.toLocaleString("en-IN")} & reveal`}
         </button>
+
+        {/* The FAQ promises any minimum is disclosed before the visitor
+            proceeds - this is where that promise is kept. */}
+        {minNote ? <p className="pay-note pay-note--min">{minNote}</p> : null}
 
         <p className="pay-note">
           <Lock width={13} height={13} />
           {note}
         </p>
-        {freeHint ? <p className="pay-note">{freeHint}</p> : null}
 
         <div className="step-actions" style={{ paddingTop: 18 }}>
           <button className="btn btn-ghost" onClick={() => go(2)}>
