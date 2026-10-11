@@ -11,12 +11,7 @@ import {
   Alert, ArrowLeft, ArrowRight, Calendar, Clock, Diya, Lock, Pin, Question, Sparkle,
 } from "./Icons";
 
-/* Meta Pixel helper - silently no-ops when the pixel isn't configured. */
-const track = (event, params) => {
-  if (typeof window !== "undefined" && typeof window.fbq === "function") {
-    window.fbq("track", event, params);
-  }
-};
+import { captureAttribution, getFbCookies, newEventId, track } from "@/lib/meta";
 
 const RAIL = ["Birth", "Question", "Offering", "Reading"];
 const railFor = (step) => (step <= 1 ? 0 : step - 1);
@@ -80,6 +75,13 @@ export default function Funnel() {
   useEffect(() => {
     if (step === 2) setTimeout(() => taRef.current?.focus(), 420);
   }, [step]);
+
+  /* Record where this visitor came from before anything else happens, and
+     report that the funnel was actually seen. */
+  useEffect(() => {
+    captureAttribution();
+    track("ViewContent", { content_name: "funnel", content_category: "reading" });
+  }, []);
 
   /* A category card was tapped further down the page: carry its question in
      so it is already written when the visitor reaches the question step. */
@@ -155,10 +157,24 @@ export default function Funnel() {
         },
         handler: async (resp) => {
           try {
+            /* One id for both copies of this conversion: the Pixel fires it
+               here, the server fires it in /verify, Meta counts it once. */
+            const eventId = newEventId();
+            const { fbp, fbc } = getFbCookies();
+
+            track("Purchase", { value: amount, currency: "INR" }, eventId);
+
             const vr = await fetch("/api/razorpay/verify", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(resp),
+              body: JSON.stringify({
+                ...resp,
+                eventId,
+                fbp,
+                fbc,
+                amount,
+                sourceUrl: window.location.href,
+              }),
             });
             const v = await vr.json();
             if (!vr.ok || !v.token) {
@@ -166,7 +182,6 @@ export default function Funnel() {
               setPaying(false);
               return;
             }
-            track("Purchase", { value: amount, currency: "INR" });
             setToken(v.token);
             setPaying(false);
             go(4);

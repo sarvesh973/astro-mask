@@ -42,6 +42,11 @@ export const metadata = {
   },
   twitter: { card: "summary_large_image" },
   robots: { index: true, follow: true },
+  // Business Manager > Brand Safety > Domains gives you this string.
+  // Required before you can set up Aggregated Event Measurement for iOS.
+  ...(process.env.NEXT_PUBLIC_META_DOMAIN_VERIFICATION
+    ? { other: { "facebook-domain-verification": process.env.NEXT_PUBLIC_META_DOMAIN_VERIFICATION } }
+    : {}),
 };
 
 export const viewport = {
