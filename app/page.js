@@ -1,7 +1,7 @@
 import Funnel from "./components/Funnel";
 import {
   Categories, ClosingCta, Dakshina, Faq, Footer, Header, Hero, HowItWorks,
-  Intro, LogoWall, MandalaBg, RevealOnScroll, Testimonials,
+  Intro, LogoWall, MandalaBg, RevealOnScroll, StickyCta, Testimonials,
 } from "./components/Sections";
 
 export default function Page() {
@@ -30,6 +30,7 @@ export default function Page() {
       </main>
 
       <Footer />
+      <StickyCta />
     </>
   );
 }

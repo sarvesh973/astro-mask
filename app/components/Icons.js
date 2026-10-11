@@ -173,4 +173,87 @@ export function Diya({ size = 86 }) {
   );
 }
 
-export const ICON_MAP = { sun: Sun, question: Question, lotus: Lotus, scroll: Scroll, moon: Moon };
+/* ===========================================================================
+   Traditional motifs, drawn to match the line weight of the set above.
+   These replace the emoji: emoji render differently on every device and
+   break the page's palette, these stay saffron and stay on-brand.
+   ======================================================================== */
+
+/** Diya - oil lamp. Tradition. */
+export const Lamp = (p) => (
+  <svg {...base} {...p}>
+    <path d="M12 3.6c0 0 2.7 3 2.7 5.2a2.7 2.7 0 0 1-5.4 0C9.3 6.6 12 3.6 12 3.6Z" />
+    <path d="M12 13.4v-2.1" />
+    <path d="M4 13.4h16c0 3.8-3.6 6.4-8 6.4s-8-2.6-8-6.4Z" />
+  </svg>
+);
+
+/** Cupped hands making an offering - dakshina. */
+export const Offering = (p) => (
+  <svg {...base} {...p}>
+    <path d="M12 3.4v3.4M10.2 5l1.8-1.6L13.8 5" />
+    <circle cx="12" cy="10.2" r="2.2" />
+    <path d="M3.6 13.2c0 4.2 3.8 7.2 8.4 7.2s8.4-3 8.4-7.2" />
+    <path d="M7.4 13.2c0 2.6 2 4.4 4.6 4.4s4.6-1.8 4.6-4.4" />
+  </svg>
+);
+
+/** Heart - love and relationships. */
+export const Heart = (p) => (
+  <svg {...base} {...p}>
+    <path d="M12 19.8S4.4 15.2 4.4 9.9A4.35 4.35 0 0 1 12 7.2a4.35 4.35 0 0 1 7.6 2.7c0 5.3-7.6 9.9-7.6 9.9Z" />
+  </svg>
+);
+
+/** Rising sun over the horizon - career and ascent. */
+export const Sunrise = (p) => (
+  <svg {...base} {...p}>
+    <path d="M3 19h18" />
+    <path d="M7 19a5 5 0 0 1 10 0" />
+    <path d="M12 4.2v2.4M5.5 7l1.7 1.7M18.5 7l-1.7 1.7M2.8 13.4h2.1M19.1 13.4h2.1" />
+  </svg>
+);
+
+/** Two bound rings - marriage. */
+export const Rings = (p) => (
+  <svg {...base} {...p}>
+    <circle cx="9" cy="14.6" r="4.9" />
+    <circle cx="15" cy="14.6" r="4.9" />
+    <path d="M12 6.6 10.4 4.5h3.2L12 6.6Z" />
+  </svg>
+);
+
+/** Kalash - the auspicious pot. Wealth and prosperity. */
+export const Kalash = (p) => (
+  <svg {...base} {...p}>
+    <circle cx="12" cy="3.9" r="1.3" />
+    <path d="M9.6 8.6V6.8h4.8v1.8" />
+    <path d="M5.4 8.6h13.2" />
+    <path d="M6.9 8.6C6 13 7.6 19.9 12 19.9s6-6.9 5.1-11.3" />
+  </svg>
+);
+
+/** North-Indian kundali - the birth chart itself. */
+export const ChartGlyph = (p) => (
+  <svg {...base} {...p}>
+    <rect x="3.2" y="3.2" width="17.6" height="17.6" rx="1.4" />
+    <path d="M3.2 3.2 20.8 20.8M20.8 3.2 3.2 20.8" />
+    <path d="M12 3.2 20.8 12 12 20.8 3.2 12Z" />
+  </svg>
+);
+
+/** Open question inside a halo. */
+export const AskGlyph = (p) => (
+  <svg {...base} {...p}>
+    <circle cx="12" cy="12" r="8.8" strokeDasharray="2.6 2.4" />
+    <path d="M9.6 9.6a2.5 2.5 0 1 1 3.6 2.2c-.75.37-1.2.93-1.2 1.75v.35" />
+    <circle cx="12" cy="17" r="0.85" fill="currentColor" stroke="none" />
+  </svg>
+);
+
+export const ICON_MAP = {
+  sun: Sun, question: Question, lotus: Lotus, scroll: Scroll, moon: Moon,
+  lamp: Lamp, offering: Offering, heart: Heart, sunrise: Sunrise,
+  rings: Rings, kalash: Kalash, chart: ChartGlyph, ask: AskGlyph,
+  sparkle: Sparkle,
+};

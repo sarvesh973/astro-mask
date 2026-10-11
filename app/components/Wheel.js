@@ -14,55 +14,151 @@ function tick() {
 /* ==========================================================================
    A single scroll-snap column.
 
-   Native scrolling does the physics (momentum, rubber-band, trackpad, touch);
-   we only read the resting position and report the index. That keeps it
-   buttery on mobile instead of fighting the browser with a JS animation loop.
+   Three ways to move it, because people try all three:
+     - touch / trackpad / mouse wheel  -> native scrolling does the physics
+     - click and drag with a mouse     -> pointer handlers below, with flick
+     - click an item, or arrow keys    -> jump straight to it
+
+   Native scroll stays in charge on touch (it is smoother than anything we
+   could write), and the drag path only engages for mouse and pen.
    ========================================================================== */
 function Wheel({ items, index, onChange, label, format }) {
   const ref = useRef(null);
   const programmatic = useRef(false);
+  const lastReported = useRef(index);
   const frame = useRef(0);
   const settleTimer = useRef(null);
+  const drag = useRef(null);
+  const suppressClick = useRef(false);
   const [active, setActive] = useState(index);
 
-  /* keep the DOM scroll position in sync when the value changes from outside */
+  const clamp = useCallback(
+    (i) => Math.max(0, Math.min(items.length - 1, i)),
+    [items.length]
+  );
+
+  /* position on mount without animating */
   useEffect(() => {
     const el = ref.current;
-    if (!el) return;
+    if (el) el.scrollTop = index * ITEM_H;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  /* re-sync only when the value changed from OUTSIDE this wheel; repositioning
+     after our own onChange would fight the scroll still in flight */
+  useEffect(() => {
     setActive(index);
+    if (lastReported.current === index) return;
+    lastReported.current = index;
+
+    const el = ref.current;
+    if (!el) return;
     const target = index * ITEM_H;
-    if (Math.abs(el.scrollTop - target) > 2) {
+    if (Math.abs(el.scrollTop - target) > 1) {
       programmatic.current = true;
       el.scrollTop = target;
-      // release on the next frame, after the scroll event has fired
-      requestAnimationFrame(() => requestAnimationFrame(() => {
-        programmatic.current = false;
-      }));
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() => { programmatic.current = false; })
+      );
     }
   }, [index]);
+
+  const commit = useCallback((i) => {
+    const c = clamp(i);
+    setActive(c);
+    if (c !== lastReported.current) {
+      lastReported.current = c;
+      onChange(c);
+    }
+  }, [clamp, onChange]);
 
   const handleScroll = useCallback(() => {
     const el = ref.current;
     if (!el) return;
 
-    // live visual feedback while the finger is still moving
+    // live visual feedback while the finger or wheel is still moving
     cancelAnimationFrame(frame.current);
     frame.current = requestAnimationFrame(() => {
-      const i = Math.max(0, Math.min(items.length - 1, Math.round(el.scrollTop / ITEM_H)));
+      const i = clamp(Math.round(el.scrollTop / ITEM_H));
       setActive((prev) => {
         if (prev !== i && !programmatic.current) tick();
         return i;
       });
     });
 
-    // commit once the scroll has come to rest
+    // commit once the scroll comes to rest
     clearTimeout(settleTimer.current);
     settleTimer.current = setTimeout(() => {
-      if (programmatic.current) return;
-      const i = Math.max(0, Math.min(items.length - 1, Math.round(el.scrollTop / ITEM_H)));
-      if (i !== index) onChange(i);
+      if (programmatic.current || drag.current) return;
+      commit(Math.round(el.scrollTop / ITEM_H));
     }, 110);
-  }, [index, items.length, onChange]);
+  }, [clamp, commit]);
+
+  /* ----------------------------------------------------------- dragging -- */
+
+  const onPointerDown = (e) => {
+    // touch keeps native scrolling; it is smoother than a JS drag
+    if (e.pointerType === "touch") return;
+    if (e.button !== undefined && e.button !== 0) return;
+
+    const el = ref.current;
+    if (!el) return;
+
+    drag.current = {
+      startY: e.clientY,
+      startTop: el.scrollTop,
+      lastY: e.clientY,
+      lastT: performance.now(),
+      velocity: 0,
+      moved: false,
+    };
+    try { el.setPointerCapture(e.pointerId); } catch {}
+    el.style.scrollSnapType = "none";   // follow the cursor exactly
+    el.dataset.dragging = "true";
+  };
+
+  const onPointerMove = (e) => {
+    const d = drag.current;
+    const el = ref.current;
+    if (!d || !el) return;
+
+    const dy = e.clientY - d.startY;
+    if (Math.abs(dy) > 2) d.moved = true;
+    el.scrollTop = d.startTop - dy;
+
+    const now = performance.now();
+    const dt = now - d.lastT;
+    if (dt > 0) d.velocity = (e.clientY - d.lastY) / dt;  // px per ms
+    d.lastY = e.clientY;
+    d.lastT = now;
+
+    e.preventDefault();
+  };
+
+  const endDrag = (e, cancelled = false) => {
+    const d = drag.current;
+    const el = ref.current;
+    if (!d || !el) return;
+    drag.current = null;
+
+    try { el.releasePointerCapture(e.pointerId); } catch {}
+    delete el.dataset.dragging;
+    el.style.scrollSnapType = "";
+
+    if (cancelled) return;
+
+    // carry a little momentum, capped so it never spins away
+    const flick = Math.max(-5, Math.min(5, Math.round(-d.velocity * 80)));
+    const i = clamp(Math.round(el.scrollTop / ITEM_H) + flick);
+
+    if (d.moved) {
+      suppressClick.current = true;
+      setTimeout(() => { suppressClick.current = false; }, 0);
+    }
+
+    el.scrollTo({ top: i * ITEM_H, behavior: "smooth" });
+    commit(i);
+  };
 
   useEffect(() => () => {
     cancelAnimationFrame(frame.current);
@@ -71,15 +167,17 @@ function Wheel({ items, index, onChange, label, format }) {
 
   const onKeyDown = (e) => {
     if (e.key === "ArrowDown" || e.key === "ArrowRight") {
-      e.preventDefault();
-      onChange(Math.min(items.length - 1, index + 1));
+      e.preventDefault(); commit(index + 1);
     } else if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
-      e.preventDefault();
-      onChange(Math.max(0, index - 1));
+      e.preventDefault(); commit(index - 1);
+    } else if (e.key === "PageDown") {
+      e.preventDefault(); commit(index + 5);
+    } else if (e.key === "PageUp") {
+      e.preventDefault(); commit(index - 5);
     } else if (e.key === "Home") {
-      e.preventDefault(); onChange(0);
+      e.preventDefault(); commit(0);
     } else if (e.key === "End") {
-      e.preventDefault(); onChange(items.length - 1);
+      e.preventDefault(); commit(items.length - 1);
     }
   };
 
@@ -91,6 +189,10 @@ function Wheel({ items, index, onChange, label, format }) {
         className="wheel"
         onScroll={handleScroll}
         onKeyDown={onKeyDown}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={(e) => endDrag(e)}
+        onPointerCancel={(e) => endDrag(e, true)}
         tabIndex={0}
         role="listbox"
         aria-label={label}
@@ -108,7 +210,7 @@ function Wheel({ items, index, onChange, label, format }) {
               aria-selected={i === active}
               data-sel={i === active}
               data-near={dist === 0 ? "0" : dist === 1 ? "1" : "2"}
-              onClick={() => onChange(i)}
+              onClick={() => { if (!suppressClick.current) commit(i); }}
             >
               {format ? format(it) : it.label}
             </div>
@@ -129,8 +231,7 @@ const MONTHS = [
 const MONTHS_SHORT = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
                       "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-const daysInMonth = (month, year) =>
-  new Date(year, month + 1, 0).getDate();
+const daysInMonth = (month, year) => new Date(year, month + 1, 0).getDate();
 
 const ordinal = (n) => {
   const s = ["th", "st", "nd", "rd"];
@@ -184,7 +285,7 @@ export function DateWheels({ value, onChange }) {
           items={months}
           index={value.month}
           onChange={(i) => onChange({ ...value, month: i })}
-          format={(m) => <span className="wheel-month">{m.label.slice(0, 3)}</span>}
+          format={(m) => m.short}
         />
         <Wheel
           label="Year"
@@ -221,7 +322,10 @@ export function TimeWheels({ value, onChange }) {
     })),
     []
   );
-  const meridiem = useMemo(() => [{ key: "AM", label: "AM" }, { key: "PM", label: "PM" }], []);
+  const meridiem = useMemo(
+    () => [{ key: "AM", label: "AM" }, { key: "PM", label: "PM" }],
+    []
+  );
 
   const isPM = value.hour >= 12;
   const h12 = value.hour % 12;

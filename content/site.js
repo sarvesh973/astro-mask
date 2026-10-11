@@ -29,9 +29,9 @@ export const site = {
   },
 
   trustBadges: [
-    { emoji: "🪔", label: "Rooted in Vedic Tradition" },
-    { emoji: "🙏", label: "Pay What You Wish" },
-    { emoji: "✨", label: "Personalised Readings" },
+    { icon: "lamp", label: "Rooted in Vedic Tradition" },
+    { icon: "offering", label: "Pay What You Wish" },
+    { icon: "sparkle", label: "Personalised Readings" },
   ],
 
   /* --- INTRODUCTION ------------------------------------------------------- */
@@ -65,25 +65,25 @@ export const site = {
     title: "Four Steps. One Personal Reading.",
     steps: [
       {
-        emoji: "🪔",
+        icon: "lamp",
         title: "Share Your Birth Details",
         lead: "Every birth chart begins with the details of your birth.",
         body: "Enter your date, time, and place of birth to help us calculate the astrological placements used in your reading.",
       },
       {
-        emoji: "🌙",
+        icon: "moon",
         title: "Ask Your Question",
         lead: "Love, career, marriage, finances, or your life’s direction.",
         body: "Choose a topic or write your own question. Tell us what’s on your mind.",
       },
       {
-        emoji: "🙏",
+        icon: "offering",
         title: "Offer Your Dakshina",
         lead: "There is no fixed price for your reading.",
         body: "Choose an amount that feels right to you and offer your dakshina voluntarily. Every individual has the freedom to decide what they wish to give.",
       },
       {
-        emoji: "✨",
+        icon: "scroll",
         title: "Receive Your Reading",
         lead: "A reading written for your chart, not for everyone’s.",
         body: "Explore a personalised interpretation of your birth chart and the traditional astrological perspectives relevant to your question.",
@@ -99,42 +99,42 @@ export const site = {
     title: "Every Question Has a Story.",
     items: [
       {
-        emoji: "❤️",
+        icon: "heart",
         title: "Love & Relationships",
         body: "Understand relationship dynamics, compatibility, and the traditional astrological interpretations associated with your romantic life.",
         button: "Explore Love",
         question: "What does my chart say about my love life and relationships?",
       },
       {
-        emoji: "💼",
+        icon: "sunrise",
         title: "Career & Ambitions",
         body: "Explore career-related planetary placements and traditional interpretations associated with professional growth.",
         button: "Explore Career",
         question: "What direction does my chart suggest for my career?",
       },
       {
-        emoji: "💍",
+        icon: "rings",
         title: "Marriage & Compatibility",
         body: "Explore traditional Vedic perspectives on marriage, compatibility, and the seventh house of your birth chart.",
         button: "Explore Marriage",
         question: "What does the seventh house of my chart say about marriage?",
       },
       {
-        emoji: "💰",
+        icon: "kalash",
         title: "Wealth & Prosperity",
         body: "Discover traditional interpretations of the second and eleventh houses and their associations with finances, resources, and gains.",
         button: "Explore Wealth",
         question: "What do the second and eleventh houses say about my finances?",
       },
       {
-        emoji: "🪐",
+        icon: "chart",
         title: "Kundali & Planetary Influences",
         body: "Explore planetary placements, Mahadasha periods, and their traditional interpretations within Vedic astrology.",
         button: "Explore My Kundali",
         question: "Walk me through my kundali and the Mahadasha I am running.",
       },
       {
-        emoji: "✨",
+        icon: "ask",
         title: "Ask Your Own Question",
         body: "Some questions don’t fit into a category. Tell us what you want to understand, and receive a reading tailored to your question.",
         button: "Ask My Question",
@@ -153,6 +153,7 @@ export const site = {
       "Whether you choose a small offering or something more, the decision is yours.",
     ],
     emphasis: "No pressure. No compulsory amount. Just a choice that belongs to you.",
+    cta: "Offer My Dakshina",
   },
 
   /* --- QUESTION STEP ------------------------------------------------------ */

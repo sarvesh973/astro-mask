@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { site } from "@/content/site";
 import { MandalaBg } from "./Ornaments";
-import { Diya, Lotus, Star } from "./Icons";
+import { Diya, ICON_MAP, Lotus, Star } from "./Icons";
 import Cta from "./Cta";
 
 /* Send a question into the funnel and scroll the visitor to it. The funnel
@@ -17,6 +17,28 @@ export function askInFunnel(question = "") {
     block: "start",
   });
 }
+
+/* --------------------------------------------------------- icon helpers */
+
+/** Gold-ringed medallion. Reads as traditional without being literal. */
+function Medallion({ name, className, size = 22 }) {
+  const Icon = ICON_MAP[name] || ICON_MAP.sparkle;
+  return (
+    <span className={className} aria-hidden="true">
+      <Icon width={size} height={size} />
+    </span>
+  );
+}
+
+const TrustIcon = ({ item }) => (
+  <span className="trust-item">
+    <Medallion name={item.icon} className="trust-ico" size={14} />
+    {item.label}
+  </span>
+);
+
+const StepIcon = ({ name }) => <Medallion name={name} className="how-ico" size={22} />;
+const CatIcon = ({ name }) => <Medallion name={name} className="cat-ico" size={24} />;
 
 /* ---------------------------------------------------------------- header */
 
@@ -79,10 +101,7 @@ export function Hero() {
 
         <div className="trust">
           {trustBadges.map((t) => (
-            <span className="trust-item" key={t.label}>
-              <span className="trust-emoji" aria-hidden="true">{t.emoji}</span>
-              {t.label}
-            </span>
+            <TrustIcon key={t.label} item={t} />
           ))}
         </div>
       </div>
@@ -166,7 +185,7 @@ export function HowItWorks() {
           {howItWorks.steps.map((s, i) => (
             <article className="how-card" key={s.title}>
               <span className="how-card-n">{String(i + 1).padStart(2, "0")}</span>
-              <span className="how-emoji" aria-hidden="true">{s.emoji}</span>
+              <StepIcon name={s.icon} />
               <h3>{s.title}</h3>
               <p className="how-lead">{s.lead}</p>
               <p>{s.body}</p>
@@ -199,7 +218,7 @@ export function Categories() {
         <div className="cat-grid">
           {categories.items.map((c) => (
             <article className="cat-card" key={c.title}>
-              <span className="cat-emoji" aria-hidden="true">{c.emoji}</span>
+              <CatIcon name={c.icon} />
               <h3>{c.title}</h3>
               <p>{c.body}</p>
               <button
@@ -245,9 +264,65 @@ export function Dakshina() {
           {dakshina.emphasis ? (
             <p className="daksh-emphasis">{dakshina.emphasis}</p>
           ) : null}
+
+          {dakshina.cta ? (
+            <div style={{ marginTop: 30 }}>
+              <Cta href="#start">{dakshina.cta}</Cta>
+            </div>
+          ) : null}
         </div>
       </div>
     </section>
+  );
+}
+
+/* ------------------------------------------------------------ sticky CTA */
+
+/**
+ * Slides up once the funnel has scrolled out of view, so there is always a
+ * way back into it. Hides again whenever the funnel itself is on screen -
+ * two competing CTAs on one screen is worse than none.
+ */
+export function StickyCta() {
+  const [show, setShow] = useState(false);
+
+  useEffect(() => {
+    let frame = 0;
+
+    const check = () => {
+      frame = 0;
+      const target = document.getElementById("start");
+      if (!target) return;
+      const { bottom } = target.getBoundingClientRect();
+      // show once the funnel has passed above the viewport
+      setShow(bottom < 0);
+    };
+
+    const onScroll = () => {
+      if (frame) return;
+      frame = requestAnimationFrame(check);
+    };
+
+    check();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
+
+  return (
+    <div className="sticky-cta" data-show={show} aria-hidden={!show}>
+      <div className="sticky-cta-in">
+        <span className="sticky-cta-text">
+          <strong>Ask the stars.</strong>
+          <span>Your dakshina, your choice.</span>
+        </span>
+        <Cta href="#start" size="sm">{site.hero.ctaLabel}</Cta>
+      </div>
+    </div>
   );
 }
 
