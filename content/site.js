@@ -15,23 +15,21 @@ export const site = {
 
   /* --- HERO --------------------------------------------------------------- */
   hero: {
-    eyebrow: "ANCIENT VEDIC WISDOM · A NEW WAY TO SEEK GUIDANCE",
+    eyebrow: "ANCIENT VEDIC WISDOM",
     headline: "Ask the Stars.",
     headlineAccent: "Choose Your Dakshina.",
     subheadline:
-      "Your birth chart holds a story written in the language of the stars. Ask the questions that matter to you, receive a personalised Vedic astrology reading, and offer whatever dakshina feels right to you.",
-    subheadlineTwo:
-      "No fixed prices. No subscriptions. Just ancient wisdom, made accessible to everyone.",
+      "A personalised Vedic reading from your own birth chart. Ask one question, then offer whatever feels right.",
+    subheadlineTwo: "No fixed price. No subscription.",
     ctaLabel: "Begin My Reading",
     ctaSecondary: "Discover Our Philosophy",
-    ctaSubtext:
-      "Your journey begins with a question. Your dakshina is entirely your choice.",
+    ctaSubtext: "Start with your date of birth · About a minute",
   },
 
   trustBadges: [
     { icon: "lamp", label: "Rooted in Vedic Tradition" },
     { icon: "offering", label: "Pay What You Wish" },
-    { icon: "sparkle", label: "Personalised Readings" },
+    { icon: "sparkle", label: "Personalised Reading" },
   ],
 
   /* --- INTRODUCTION ------------------------------------------------------- */
@@ -39,17 +37,17 @@ export const site = {
     eyebrow: "A DIFFERENT KIND OF ASTROLOGY",
     title: "Wisdom Shouldn’t Have a Fixed Price.",
     body: [
-      "For generations, people have turned to Vedic astrology to reflect on life’s biggest questions. But seeking guidance shouldn’t mean choosing between your beliefs and your budget.",
-      "DakshAstro brings the traditional spirit of dakshina into the modern world. Share your birth details, ask what’s on your mind, and receive an astrology reading without a predetermined price.",
+      "Seeking guidance shouldn’t mean choosing between your beliefs and your budget. Share your birth details, ask what’s on your mind, and set your own price for the answer.",
     ],
-    emphasis: "You decide what the experience is worth to you.",
-    cta: "Start Your Journey",
+    emphasis: "You decide what it was worth.",
+    cta: "Start My Reading",
   },
 
   /* --- AS SEEN IN / PARTNER LOGOS ----------------------------------------- */
   // Leave `src: null` for a dashed placeholder you can fill later.
   // Set `logoWall: null` to hide the row entirely.
-  logoWall: {
+  logoWall: null,
+  _logoWall: {
     title: "FEATURED IN",
     logos: [
       { name: "Logo 1", src: null },
@@ -62,31 +60,27 @@ export const site = {
   /* --- HOW IT WORKS ------------------------------------------------------- */
   howItWorks: {
     eyebrow: "YOUR JOURNEY STARTS HERE",
-    title: "Four Steps. One Personal Reading.",
+    title: "Four Steps. One Reading.",
     steps: [
       {
         icon: "lamp",
         title: "Share Your Birth Details",
-        lead: "Every birth chart begins with the details of your birth.",
-        body: "Enter your date, time, and place of birth to help us calculate the astrological placements used in your reading.",
+        body: "Date, time and place. That is your chart.",
       },
       {
         icon: "moon",
         title: "Ask Your Question",
-        lead: "Love, career, marriage, finances, or your life’s direction.",
-        body: "Choose a topic or write your own question. Tell us what’s on your mind.",
+        body: "Love, career, marriage, money — or your own.",
       },
       {
         icon: "offering",
         title: "Offer Your Dakshina",
-        lead: "There is no fixed price for your reading.",
-        body: "Choose an amount that feels right to you and offer your dakshina voluntarily. Every individual has the freedom to decide what they wish to give.",
+        body: "Any amount you choose. No fixed price.",
       },
       {
         icon: "scroll",
         title: "Receive Your Reading",
-        lead: "A reading written for your chart, not for everyone’s.",
-        body: "Explore a personalised interpretation of your birth chart and the traditional astrological perspectives relevant to your question.",
+        body: "Written for your chart, not for everyone’s.",
       },
     ],
     cta: "Get My Reading",
@@ -101,42 +95,42 @@ export const site = {
       {
         icon: "heart",
         title: "Love & Relationships",
-        body: "Understand relationship dynamics, compatibility, and the traditional astrological interpretations associated with your romantic life.",
+        body: "Compatibility, timing, and the patterns you keep repeating.",
         button: "Explore Love",
         question: "What does my chart say about my love life and relationships?",
       },
       {
         icon: "sunrise",
         title: "Career & Ambitions",
-        body: "Explore career-related planetary placements and traditional interpretations associated with professional growth.",
+        body: "The placements behind your work and your growth.",
         button: "Explore Career",
         question: "What direction does my chart suggest for my career?",
       },
       {
         icon: "rings",
         title: "Marriage & Compatibility",
-        body: "Explore traditional Vedic perspectives on marriage, compatibility, and the seventh house of your birth chart.",
+        body: "What the seventh house says about marriage.",
         button: "Explore Marriage",
         question: "What does the seventh house of my chart say about marriage?",
       },
       {
         icon: "kalash",
         title: "Wealth & Prosperity",
-        body: "Discover traditional interpretations of the second and eleventh houses and their associations with finances, resources, and gains.",
+        body: "The second and eleventh houses — money, resources, gains.",
         button: "Explore Wealth",
         question: "What do the second and eleventh houses say about my finances?",
       },
       {
         icon: "chart",
         title: "Kundali & Planetary Influences",
-        body: "Explore planetary placements, Mahadasha periods, and their traditional interpretations within Vedic astrology.",
+        body: "Your full chart, planet by planet, and the dasha you are running.",
         button: "Explore My Kundali",
         question: "Walk me through my kundali and the Mahadasha I am running.",
       },
       {
         icon: "ask",
         title: "Ask Your Own Question",
-        body: "Some questions don’t fit into a category. Tell us what you want to understand, and receive a reading tailored to your question.",
+        body: "Anything that does not fit a category.",
         button: "Ask My Question",
         question: "", // leaves the box empty and focuses it
       },
@@ -148,18 +142,16 @@ export const site = {
     eyebrow: "ROOTED IN TRADITION",
     title: "Your Dakshina. Your Choice.",
     body: [
-      "In the Indian tradition, dakshina is an offering given willingly as a gesture of respect and appreciation.",
-      "We believe access to an astrology reading shouldn’t depend on how much someone can afford to pay. That’s why DakshAstro doesn’t impose a fixed price on your reading.",
-      "Whether you choose a small offering or something more, the decision is yours.",
+      "Dakshina is an offering given willingly, as a gesture of respect. A reading shouldn’t depend on what you can afford — so there is no fixed price.",
     ],
-    emphasis: "No pressure. No compulsory amount. Just a choice that belongs to you.",
+    emphasis: "No pressure. No set amount. Your choice.",
     cta: "Offer My Dakshina",
   },
 
   /* --- QUESTION STEP ------------------------------------------------------ */
   question: {
-    title: "What do you want to ask the stars?",
-    subtitle: "One clear question gets the clearest answer.",
+    title: "Ask your question",
+    subtitle: "Write one clear question, or tap a suggestion below.",
     placeholder: "e.g. When will I find stability in my career?",
     suggestions: [
       "When will I get married?",
@@ -174,8 +166,7 @@ export const site = {
   /* --- DAKSHINA / PAYMENT STEP -------------------------------------------- */
   payment: {
     title: "Offer Your Dakshina",
-    subtitle:
-      "There is no fixed price for your reading. Choose an amount that feels right to you.",
+    subtitle: "Drag the slider or tap an amount. You choose.",
     presets: [51, 101, 251, 501],
     defaultAmount: 101,
     minAmount: 11,

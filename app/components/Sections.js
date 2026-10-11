@@ -187,7 +187,6 @@ export function HowItWorks() {
               <span className="how-card-n">{String(i + 1).padStart(2, "0")}</span>
               <StepIcon name={s.icon} />
               <h3>{s.title}</h3>
-              <p className="how-lead">{s.lead}</p>
               <p>{s.body}</p>
             </article>
           ))}

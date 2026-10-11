@@ -196,7 +196,7 @@ export default function Funnel() {
       <div className="step-head">
         <span className="eyebrow">Step One</span>
         <h2 className="step-title" style={{ marginTop: 10 }}>When were you born?</h2>
-        <p className="step-sub">Scroll to your date of birth.</p>
+        <p className="step-sub">Drag the wheels to your date of birth.</p>
       </div>
 
       <DateWheels value={date} onChange={setDate} />
@@ -216,8 +216,7 @@ export default function Funnel() {
         <span className="eyebrow">Step One</span>
         <h2 className="step-title" style={{ marginTop: 10 }}>And where?</h2>
         <p className="step-sub">
-          Your rising sign changes every two hours — this is what makes the
-          reading yours and not your birthday&rsquo;s.
+          Set your birth time and place. Your rising sign changes every two hours.
         </p>
       </div>
 

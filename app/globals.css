@@ -164,7 +164,7 @@ a:hover { text-decoration: underline; }
   content: "";
   position: absolute;
   inset: 0;
-  opacity: 0.035;
+  opacity: 0.018;
   background-image:
     repeating-linear-gradient(45deg, var(--ink) 0 1px, transparent 1px 7px),
     repeating-linear-gradient(-45deg, var(--ink) 0 1px, transparent 1px 7px);
@@ -173,7 +173,7 @@ a:hover { text-decoration: underline; }
 .mandala {
   position: absolute;
   color: var(--saffron-600);
-  opacity: 0.09;
+  opacity: 0.055;
   animation: spin 160s linear infinite;
   transform-origin: 50% 50%;
 }
@@ -754,6 +754,21 @@ section { position: relative; }
   pointer-events: none;
   z-index: 0;
 }
+
+/* small chevrons on the selection band - they say "this moves" without
+   needing a sentence to explain it */
+.wheels-band::before,
+.wheels-band::after {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 9px;
+  line-height: 1;
+  color: var(--saffron-500);
+  opacity: 0.5;
+}
+.wheels-band::before { content: "▲"; top: -11px; }
+.wheels-band::after  { content: "▼"; bottom: -11px; }
 
 .wheel {
   position: relative;
